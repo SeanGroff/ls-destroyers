@@ -1,5 +1,12 @@
 import React from 'react'
+import { Container } from 'semantic-ui-react'
 
-const Home = () => <p>LS Destroyers</p>
+import Login from './Login'
+
+const Home = () => (
+  <Container className="full-height center aligned middle aligned grid">
+    <Login />
+  </Container>
+)
 
 export default Home
