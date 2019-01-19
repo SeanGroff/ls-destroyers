@@ -7,7 +7,7 @@ import Dashboard from './Dashboard'
 const App = () => (
   <Router className="full-height">
     <Login path="/" />
-    <Dashboard path="/dashboard" />
+    <Dashboard path="dashboard" />
   </Router>
 )
 
