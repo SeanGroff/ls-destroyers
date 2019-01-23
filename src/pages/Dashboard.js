@@ -1,5 +1,18 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-const Dashboard = () => <div>Dashboard Page</div>
+import AppMenu from '../components/Menu'
+import { withFirebase } from '../components/Firebase'
 
-export default Dashboard
+class Dashboard extends Component {
+  render() {
+    const { firebase } = this.props
+    return (
+      <div>
+        <AppMenu onSignOut={firebase.handleSignOut} />
+        <h1>Dashboard</h1>
+      </div>
+    )
+  }
+}
+
+export default withFirebase(Dashboard)

@@ -26,6 +26,11 @@ const INITIAL_STATE = {
 class Login extends PureComponent {
   state = INITIAL_STATE
 
+  componentDidMount() {
+    const { firebase } = this.props
+    firebase.handleSignOut()
+  }
+
   handleChange = event => {
     const { target } = event
     this.setState(() => ({
