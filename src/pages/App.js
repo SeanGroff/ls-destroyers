@@ -6,6 +6,7 @@ import AppMenu from '../components/Menu'
 import Login from './Login'
 import Dashboard from './Dashboard'
 import Email from './Email'
+import Users from './Users'
 import NotFound from './NotFound'
 import { withAuth } from '../components/Auth'
 
@@ -20,6 +21,7 @@ const ProtectedContainer = () => {
       <Router>
         <ProtectedRoute path="/" component={Dashboard} />
         <ProtectedRoute path="email" component={Email} />
+        <ProtectedRoute path="users" component={Users} />
       </Router>
     </Fragment>
   )

@@ -31,6 +31,13 @@ class AppMenu extends PureComponent {
         />
         <Menu.Item
           as={Link}
+          to="/admin/users"
+          name="users"
+          active={activeItem === 'users'}
+          onClick={this.handleItemClick}
+        />
+        <Menu.Item
+          as={Link}
           to="/admin/email"
           name="email"
           active={activeItem === 'email'}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { List } from 'semantic-ui-react'
+import { Container, List } from 'semantic-ui-react'
 
 import { withFirebase } from '../components/Firebase'
 import useFetchCollection from '../hooks/useFetchCollection'
@@ -10,8 +10,8 @@ const Email = ({ firebase }) => {
     collection: 'users',
   })
   return (
-    <div>
-      <List>
+    <Container>
+      <List animated selection horizontal>
         {contacts &&
           contacts.map(contact => (
             <List.Item key={contact.email}>
@@ -26,7 +26,7 @@ const Email = ({ firebase }) => {
             </List.Item>
           ))}
       </List>
-    </div>
+    </Container>
   )
 }
 
