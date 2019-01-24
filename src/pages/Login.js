@@ -108,7 +108,7 @@ class Login extends PureComponent {
     } = this.state
     const isValid = this.formValidation()
     if (shouldRedirect) {
-      return <Redirect noThrow to="dashboard" />
+      return <Redirect noThrow to="admin" />
     }
     return (
       <Container className="full-height center aligned middle aligned grid">
