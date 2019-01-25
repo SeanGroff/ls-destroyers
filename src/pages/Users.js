@@ -1,16 +1,46 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Container, Card, Icon, Segment } from 'semantic-ui-react'
+import {
+  Button,
+  Container,
+  Card,
+  Icon,
+  Message,
+  Segment,
+} from 'semantic-ui-react'
 
 import { NewUserModal } from '../components/Users'
 import { withFirebase } from '../components/Firebase'
-import useFetchCollection from '../hooks/useFetchCollection'
 
 const Users = ({ firebase }) => {
   const [isOpen, setOpen] = useState(false)
-  const users = useFetchCollection({ firebase, collection: 'users' })
+  const [users, setUsers] = useState([])
+  const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => {
+    const unsubscribe = firebase.db.collection('users').onSnapshot(
+      snapshot => {
+        const usersCollection = snapshot.docs.map(doc => doc.data())
+        setUsers([...users, ...usersCollection])
+      },
+      err => {
+        setErrorMessage(err.message)
+      }
+    )
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
   return (
     <Container>
+      {!!errorMessage && (
+        <Message
+          onDismiss={() => setErrorMessage('')}
+          header="Error!"
+          content={errorMessage}
+        />
+      )}
       <Card.Group>
         {users &&
           users.map(user => (

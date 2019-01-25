@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, List } from 'semantic-ui-react'
 
 import { withFirebase } from '../components/Firebase'
-import useFetchCollection from '../hooks/useFetchCollection'
+import { useFetchCollection } from '../hooks'
 
 const Email = ({ firebase }) => {
   const contacts = useFetchCollection({
