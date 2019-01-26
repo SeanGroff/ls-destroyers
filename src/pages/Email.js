@@ -1,7 +1,6 @@
-import React, { Fragment, useState } from 'react'
-import { Button, Container } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Container, Form } from 'semantic-ui-react'
 
-import { MultiSelect } from '../components/Dropdown'
 import { withFirebase } from '../components/Firebase'
 import { useFetchCollection } from '../hooks'
 
@@ -12,14 +11,14 @@ const Email = ({ firebase }) => {
   })
 
   const [recipients, setRecipients] = useState([])
+  const [subject, setSubject] = useState('')
+  const [body, setBody] = useState('')
 
-  const handleChange = (e, { value }) => {
-    setRecipients(value)
-  }
-
-  const handleSend = () => {
+  const handleSendEmail = () => {
     // @TODO Add real email logic to SendGrid
     console.log('To: ', recipients)
+    console.log('Subject: ', subject)
+    console.log('Body: ', body)
   }
 
   const contactOptions =
@@ -34,19 +33,41 @@ const Email = ({ firebase }) => {
   return (
     <Container>
       {contacts && (
-        <Fragment>
-          <MultiSelect
-            onChange={handleChange}
-            options={contactOptions}
+        <Form>
+          <Form.Dropdown
+            fluid
+            multiple
+            selection
             placeholder="To"
+            options={contactOptions}
+            onChange={(e, { value }) => {
+              setRecipients(value)
+            }}
           />
-          <Button
+          <Form.Input
+            type="text"
+            fluid
+            placeholder="Subject"
+            onChange={e => {
+              setSubject(e.target.value)
+            }}
+          />
+          <Form.TextArea
+            type="text"
+            autoHeight
+            style={{ minHeight: 200 }}
+            onChange={e => {
+              setBody(e.target.value)
+            }}
+          />
+          <Form.Button
+            type="submit"
             content="Send"
             color="blue"
             disabled={!recipients || !recipients.length}
-            onClick={handleSend}
+            onClick={handleSendEmail}
           />
-        </Fragment>
+        </Form>
       )}
     </Container>
   )
