@@ -32,7 +32,7 @@ const UsersCardList = ({ firebase }) => {
     />
   ) : (
     <Card.Group>
-      {users && users.map(user => <UserCard user={user} />)}
+      {users && users.map(user => <UserCard key={user.email} user={user} />)}
     </Card.Group>
   )
 }

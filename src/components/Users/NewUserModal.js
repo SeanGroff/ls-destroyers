@@ -1,11 +1,9 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react'
 import { withFirebase } from '../Firebase'
 
 const initialFormState = {
-  loading: false,
-  errorMessage: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -13,50 +11,29 @@ const initialFormState = {
   player: '',
 }
 
-const reducer = (state, action) => {
-  const { errorMessage, firstName, lastName, email, phone, player } = action
-  switch (action.type) {
-    case 'TOGGLE_LOADING':
-      return { ...state, loading: !state.loading }
-    case 'SET_ERROR_MESSAGE':
-      return { ...state, errorMessage }
-    case 'UPDATE_FIRST_NAME':
-      return { ...state, firstName }
-    case 'UPDATE_LAST_NAME':
-      return { ...state, lastName }
-    case 'UPDATE_EMAIL':
-      return { ...state, email }
-    case 'UPDATE_PHONE':
-      return { ...state, phone }
-    case 'UPDATE_PLAYER':
-      return { ...state, player }
-    case 'RESET':
-      return initialFormState
-    default:
-      return state
-  }
-}
+const formReducer = (state, { name, value }) =>
+  !name ? initialFormState : { ...state, [name]: value }
 
 const NewUserModal = ({ firebase, isOpen, onClose }) => {
-  const [state, dispatch] = useReducer(reducer, initialFormState)
-  const {
-    errorMessage,
-    loading,
-    firstName,
-    lastName,
-    email,
-    phone,
-    player,
-  } = state
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [state, dispatch] = useReducer(formReducer, initialFormState)
+  const { firstName, lastName, email, phone, player } = state
+
+  const handleChange = event => {
+    const { target } = event
+    const name = target.name ? target.name : target.id
+    dispatch({ name, value: target.value })
+  }
 
   const handleClose = () => {
-    dispatch({ type: 'RESET' })
+    dispatch(initialFormState)
     onClose()
   }
 
   const handleSubmit = async event => {
     event.preventDefault()
-    dispatch({ type: 'TOGGLE_LOADING' })
+    setLoading(true)
 
     try {
       await firebase.db.collection('users').add({
@@ -66,11 +43,11 @@ const NewUserModal = ({ firebase, isOpen, onClose }) => {
         phone: Number(phone),
         player,
       })
-      dispatch({ type: 'TOGGLE_LOADING' })
+      setLoading(false)
       onClose()
     } catch (err) {
-      dispatch({ type: 'TOGGLE_LOADING' })
-      dispatch({ type: 'SET_ERROR_MESSAGE', errorMessage: err.message })
+      setLoading(false)
+      setErrorMessage(err.message)
     }
   }
 
@@ -86,12 +63,7 @@ const NewUserModal = ({ firebase, isOpen, onClose }) => {
               label="First name"
               placeholder="First name"
               value={firstName}
-              onChange={e =>
-                dispatch({
-                  type: 'UPDATE_FIRST_NAME',
-                  firstName: e.target.value,
-                })
-              }
+              onChange={handleChange}
             />
             <Form.Input
               fluid
@@ -99,12 +71,7 @@ const NewUserModal = ({ firebase, isOpen, onClose }) => {
               label="Last name"
               placeholder="Last name"
               value={lastName}
-              onChange={e =>
-                dispatch({
-                  type: 'UPDATE_LAST_NAME',
-                  lastName: e.target.value,
-                })
-              }
+              onChange={handleChange}
             />
             <Form.Input
               fluid
@@ -112,12 +79,7 @@ const NewUserModal = ({ firebase, isOpen, onClose }) => {
               label="Email"
               placeholder="Email"
               value={email}
-              onChange={e =>
-                dispatch({
-                  type: 'UPDATE_EMAIL',
-                  email: e.target.value,
-                })
-              }
+              onChange={handleChange}
             />
             <Form.Input
               fluid
@@ -125,12 +87,7 @@ const NewUserModal = ({ firebase, isOpen, onClose }) => {
               label="Phone Number"
               placeholder="Phone Number"
               value={phone}
-              onChange={e =>
-                dispatch({
-                  type: 'UPDATE_PHONE',
-                  phone: e.target.value,
-                })
-              }
+              onChange={handleChange}
             />
             <Form.Input
               fluid
@@ -138,12 +95,7 @@ const NewUserModal = ({ firebase, isOpen, onClose }) => {
               label="Player Name"
               placeholder="Player Name"
               value={player}
-              onChange={e =>
-                dispatch({
-                  type: 'UPDATE_PLAYER',
-                  player: e.target.value,
-                })
-              }
+              onChange={handleChange}
             />
           </Form.Group>
         </Form>
