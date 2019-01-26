@@ -1,6 +1,7 @@
-import React from 'react'
-import { Container, List } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Button, Container } from 'semantic-ui-react'
 
+import { MultiSelect } from '../components/Dropdown'
 import { withFirebase } from '../components/Firebase'
 import { useFetchCollection } from '../hooks'
 
@@ -9,23 +10,44 @@ const Email = ({ firebase }) => {
     firebase,
     collection: 'users',
   })
+
+  const [recipients, setRecipients] = useState([])
+
+  const handleChange = (e, { value }) => {
+    setRecipients(value)
+  }
+
+  const handleSend = () => {
+    // @TODO Add real email logic to SendGrid
+    console.log('To: ', recipients)
+  }
+
+  const contactOptions =
+    contacts &&
+    contacts.map(contact => ({
+      ...contact,
+      key: contact.email,
+      text: `${contact.first_name} ${contact.last_name}`,
+      value: contact.email,
+    }))
+
   return (
     <Container>
-      <List animated selection horizontal>
-        {contacts &&
-          contacts.map(contact => (
-            <List.Item key={contact.email}>
-              <List.Content>
-                <List.Header as="a">{`${contact.first_name} ${
-                  contact.last_name
-                }`}</List.Header>
-                <List.Description>
-                  {`Player: ${contact.player}`}
-                </List.Description>
-              </List.Content>
-            </List.Item>
-          ))}
-      </List>
+      {contacts && (
+        <>
+          <MultiSelect
+            onChange={handleChange}
+            options={contactOptions}
+            placeholder="To"
+          />
+          <Button
+            content="Send"
+            color="blue"
+            disabled={!recipients || !recipients.length}
+            onClick={handleSend}
+          />
+        </>
+      )}
     </Container>
   )
 }
