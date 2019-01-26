@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Button, Container } from 'semantic-ui-react'
 
 import { MultiSelect } from '../components/Dropdown'
@@ -34,7 +34,7 @@ const Email = ({ firebase }) => {
   return (
     <Container>
       {contacts && (
-        <>
+        <Fragment>
           <MultiSelect
             onChange={handleChange}
             options={contactOptions}
@@ -46,7 +46,7 @@ const Email = ({ firebase }) => {
             disabled={!recipients || !recipients.length}
             onClick={handleSend}
           />
-        </>
+        </Fragment>
       )}
     </Container>
   )
