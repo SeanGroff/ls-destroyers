@@ -6,10 +6,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "react-scripts build && firebase deploy"
   },
   "dependencies": {
     "@reach/router": "^1.2.1",
+    "axios": "^0.18.0",
     "firebase": "^5.8.0",
     "lodash.get": "^4.4.2",
     "prop-types": "^15.6.2",
@@ -22,10 +24,5 @@
   "devDependencies": {
     "prettier": "^1.15.3"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
 }

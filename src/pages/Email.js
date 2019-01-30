@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Container, Form } from 'semantic-ui-react'
+import { Container, Form, Message } from 'semantic-ui-react'
+import axios from 'axios'
 
 import { withFirebase } from '../components/Firebase'
 import { useFetchCollection } from '../hooks'
@@ -13,12 +14,29 @@ const Email = ({ firebase }) => {
   const [recipients, setRecipients] = useState([])
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
+  const [message, setMessage] = useState('')
+  const [isError, setError] = useState(false)
 
-  const handleSendEmail = () => {
-    // @TODO Add real email logic to SendGrid
-    console.log('To: ', recipients)
-    console.log('Subject: ', subject)
-    console.log('Body: ', body)
+  const handleSendEmail = async () => {
+    try {
+      setError(false)
+
+      const { data } = await axios({
+        method: 'post',
+        headers: { 'content-type': 'application/json' },
+        url: `${process.env.REACT_APP_FUNCTIONS_URL}/sendEmail`,
+        data: {
+          to: recipients,
+          subject,
+          text: body,
+        },
+      })
+
+      setMessage(data.message)
+    } catch (err) {
+      setError(true)
+      setMessage(err.message)
+    }
   }
 
   const contactOptions =
@@ -68,6 +86,14 @@ const Email = ({ firebase }) => {
             onClick={handleSendEmail}
           />
         </Form>
+      )}
+      {message && (
+        <Message
+          negative={isError}
+          success={!isError}
+          header={isError ? 'Error' : 'Success'}
+          content={message}
+        />
       )}
     </Container>
   )
