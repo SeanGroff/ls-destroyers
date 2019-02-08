@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from '@reach/router'
+import { Link, Redirect } from '@reach/router'
 import { Menu } from 'semantic-ui-react'
 
 import { withFirebase } from '../Firebase'
@@ -8,6 +8,7 @@ import { withFirebase } from '../Firebase'
 class AppMenu extends PureComponent {
   state = {
     activeItem: 'dashboard',
+    shouldRedirect: false,
   }
 
   handleItemClick = (e, { name }) => {
@@ -16,10 +17,16 @@ class AppMenu extends PureComponent {
 
   handleSignOutClick = () => {
     this.props.firebase.handleSignOut()
+    this.setState(() => ({ shouldRedirect: true }))
   }
 
   render() {
-    const { activeItem } = this.state
+    const { activeItem, shouldRedirect } = this.state
+
+    if (shouldRedirect) {
+      return <Redirect noThrow to="/" />
+    }
+
     return (
       <Menu pointing secondary>
         <Menu.Item

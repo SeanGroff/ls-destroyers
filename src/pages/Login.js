@@ -26,11 +26,6 @@ const INITIAL_STATE = {
 class Login extends PureComponent {
   state = INITIAL_STATE
 
-  componentDidMount() {
-    const { firebase } = this.props
-    firebase.handleSignOut()
-  }
-
   handleChange = event => {
     const { target } = event
     this.setState(() => ({
@@ -48,6 +43,8 @@ class Login extends PureComponent {
       : firebase.handleCreateUserWithEmailAndPassword
 
     this.setState(() => ({ isLoading: true }))
+
+    firebase.handleSignOut()
 
     const user = await authenticate(email, password).catch(err => {
       this.setState(() => ({ isLoading: false, errorMessage: err.message }))

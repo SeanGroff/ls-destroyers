@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { Button, Container, Icon, Segment } from 'semantic-ui-react'
+import { Button, Container, Segment } from 'semantic-ui-react'
 
 import { NewUserModal, UsersCardList } from '../components/Users'
-import { withFirebase } from '../components/Firebase'
 
-const Users = ({ firebase }) => {
+const Users = () => {
   const [isOpen, setOpen] = useState(false)
 
   return (
@@ -13,10 +11,12 @@ const Users = ({ firebase }) => {
       <UsersCardList />
       <Segment>
         <Container textAlign="center">
-          <Button color="blue" onClick={() => setOpen(true)}>
-            <Icon name="plus" />
-            Add New User
-          </Button>
+          <Button
+            content="Add New User"
+            color="blue"
+            icon="plus"
+            onClick={() => setOpen(true)}
+          />
         </Container>
       </Segment>
       <NewUserModal isOpen={isOpen} onClose={() => setOpen(false)} />
@@ -24,8 +24,4 @@ const Users = ({ firebase }) => {
   )
 }
 
-Users.propTypes = {
-  firebase: PropTypes.object.isRequired,
-}
-
-export default withFirebase(Users)
+export default Users

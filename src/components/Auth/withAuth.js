@@ -11,10 +11,15 @@ const withAuthentication = Component => {
 
     componentDidMount() {
       const { firebase } = this.props
-      this.unsubscribe = firebase.auth.onAuthStateChanged(authUser => {
-        authUser
-          ? this.setState({ authUser })
-          : this.setState({ authUser: null })
+      this.unsubscribe = firebase.auth.onAuthStateChanged(async authUser => {
+        if (authUser) {
+          const { claims } = await authUser.getIdTokenResult()
+          authUser && claims.admin
+            ? this.setState({ authUser: { ...authUser, admin: claims.admin } })
+            : this.setState({ authUser: null })
+        } else {
+          this.setState({ authUser: null })
+        }
       })
     }
 

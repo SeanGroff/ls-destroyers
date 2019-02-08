@@ -1,8 +1,25 @@
 const functions = require('firebase-functions')
+const admin = require('firebase-admin')
 const cors = require('cors')
 const sgMail = require('@sendgrid/mail')
 
 const corsHandler = cors({ origin: true })
+
+admin.initializeApp()
+
+exports.addAdminRole = functions.https.onCall(async ({ email }) => {
+  try {
+    const user = await admin.auth().getUserByEmail(email)
+    await admin.auth().setCustomUserClaims(user.uid, {
+      admin: true,
+    })
+
+    return { message: `Success! ${email} has been made an admin` }
+  } catch (err) {
+    console.log(JSON.stringify(err, null, 2))
+    return { error: err.message }
+  }
+})
 
 exports.sendEmail = functions.https.onRequest((req, res) => {
   corsHandler(req, res, async () => {
