@@ -45,6 +45,7 @@ const NewUserModal = ({ firebase, isOpen, onClose }) => {
       })
       setLoading(false)
       onClose()
+      dispatch(initialFormState)
     } catch (err) {
       setLoading(false)
       setErrorMessage(err.message)
