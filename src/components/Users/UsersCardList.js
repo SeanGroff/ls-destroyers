@@ -63,7 +63,7 @@ const UsersCardList = ({ firebase }) => {
       content={errorMessage}
     />
   ) : (
-    <Card.Group>
+    <Card.Group style={{ overflow: 'auto', maxHeight: '80vh' }}>
       {users &&
         users.map(user => (
           <UserCard key={user.email} user={user} renderExtra={renderExtra} />
